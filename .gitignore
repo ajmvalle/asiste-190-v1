@@ -1,0 +1,41 @@
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+.env
+.env.*
+!.env.example
+
+# Django
+*.sqlite3
+media/
+staticfiles/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Sistema Operativo
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+
+# =========================
+# Cache / build
+# =========================
+.cache/

@@ -1,0 +1,28 @@
+import { useEffect } from "react";
+
+type PageMetaProps = {
+  title: string;
+  description?: string;
+};
+
+export default function PageMeta({ title, description }: PageMetaProps) {
+  useEffect(() => {
+    if (title) {
+      document.title = title;
+    }
+
+    if (description) {
+      let meta = document.querySelector('meta[name="description"]');
+
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("name", "description");
+        document.head.appendChild(meta);
+      }
+
+      meta.setAttribute("content", description);
+    }
+  }, [title, description]);
+
+  return null; // no renderiza nada
+}
