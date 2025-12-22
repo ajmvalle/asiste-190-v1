@@ -31,6 +31,11 @@ const navItems: NavItem[] = [
     name: "Dashboard",
     subItems: [{ name: "Inicio", path: "/app/dashboard", pro: false }],
   },
+  {
+    icon: <UserCircleIcon />,
+    name: "Estudiantes",
+    subItems: [{ name: "Lista", path: "/app/students", pro: false }],
+  },
 ];
 
 const othersItems: NavItem[] = [];
