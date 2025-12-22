@@ -9,6 +9,7 @@ interface ButtonProps {
   onClick?: () => void; // Click handler
   disabled?: boolean; // Disabled state
   className?: string; // Disabled state
+  type?: "button" | "submit" | "reset";
 }
 
 const Button = ({
@@ -20,6 +21,7 @@ const Button = ({
   onClick,
   className = "",
   disabled = false,
+  type = "button",
 }: ButtonProps) => {
   // Size Classes
   const sizeClasses = {
@@ -37,6 +39,7 @@ const Button = ({
 
   return (
     <button
+      type={type}
       className={`inline-flex items-center justify-center gap-2 rounded-lg transition ${className} ${
         sizeClasses[size]
       } ${variantClasses[variant]} ${

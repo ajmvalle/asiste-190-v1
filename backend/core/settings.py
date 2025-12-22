@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "rest_framework",
     
     'accounts',
+    'students',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,7 @@ CSRF_COOKIE_SAMESITE = "Lax"
 
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
+
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"

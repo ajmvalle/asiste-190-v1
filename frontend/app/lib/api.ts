@@ -25,14 +25,15 @@ function getCookie(name: string): string | null {
 ========================================= */
 export async function apiFetch(url: string, options: RequestInit = {}) {
   const csrfToken = getCookie("csrftoken");
+  const isFormData = options.body instanceof FormData;
 
   return fetch(`${API_BASE}${url}`, {
     credentials: "include",
     ...options,
     headers: {
       ...(options.headers || {}),
-      "Content-Type": "application/json",
       ...(csrfToken ? { "X-CSRFToken": csrfToken } : {}),
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
     },
   });
 }

@@ -58,7 +58,11 @@ const TableCell = ({
   className,
 }: TableCellProps) => {
   const CellTag = isHeader ? "th" : "td";
-  return <CellTag className={` ${className}`}>{children}</CellTag>;
+  return (
+    <CellTag className={`px-4 py-3 text-left align-middle ${className}`}>
+      {children}
+    </CellTag>
+  );
 };
 
 export { Table, TableHeader, TableBody, TableRow, TableCell };
