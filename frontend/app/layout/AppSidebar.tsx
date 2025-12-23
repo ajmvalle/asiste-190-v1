@@ -45,6 +45,11 @@ const navItems: NavItem[] = [
         path: "/app/monitor",
         pro: false,
       },
+      {
+        name: "Lista",
+        path: "/app/attendance",
+        pro: false,
+      },
     ],
   },
 ];

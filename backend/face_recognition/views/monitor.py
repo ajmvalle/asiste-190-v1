@@ -43,14 +43,10 @@ class RecognizeFaceView(APIView):
 
         already_checked = Attendance.objects.filter(
             alumno=alumno,
-            timestamp__date=today,
+            attendance_date=today,
         ).exists()
-        
-        foto_url = (
-            request.build_absolute_uri(alumno.foto.url)
-            if alumno.foto
-            else None
-        )
+
+        foto_url = request.build_absolute_uri(alumno.foto.url) if alumno.foto else None
 
         if already_checked:
             return Response(
@@ -63,7 +59,7 @@ class RecognizeFaceView(APIView):
                 }
             )
 
-        Attendance.objects.create(alumno=alumno)
+        Attendance.objects.create(alumno=alumno, attendance_date=today)
 
         return Response(
             {

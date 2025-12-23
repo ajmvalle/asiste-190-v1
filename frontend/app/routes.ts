@@ -16,6 +16,10 @@ export default [
 
     route("monitor", "routes/monitor/Monitor.tsx"),
 
+    route("attendance", "routes/attendance/AttendanceLayout.tsx", [
+      index("routes/attendance/AttendanceList.tsx"),
+    ]),
+
     route("students", "routes/students/StudentsLayout.tsx", [
       index("routes/students/StudentsList.tsx"),
       route("new", "routes/students/StudentCreate.tsx"),

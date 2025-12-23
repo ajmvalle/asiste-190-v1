@@ -1,6 +1,6 @@
 from django.db import models
+from django.utils import timezone
 from students.models import Alumno
-
 
 class AlumnoFace(models.Model):
     alumno = models.OneToOneField(
@@ -18,6 +18,7 @@ class AlumnoFace(models.Model):
 class Attendance(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    attendance_date = models.DateField(db_index=True, default=timezone.localdate)
     source = models.CharField(max_length=50, default="facial")
 
     def __str__(self):
