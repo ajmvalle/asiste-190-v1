@@ -45,6 +45,12 @@ class RecognizeFaceView(APIView):
             alumno=alumno,
             timestamp__date=today,
         ).exists()
+        
+        foto_url = (
+            request.build_absolute_uri(alumno.foto.url)
+            if alumno.foto
+            else None
+        )
 
         if already_checked:
             return Response(
@@ -65,6 +71,7 @@ class RecognizeFaceView(APIView):
                 "already_registered": False,
                 "alumno": alumno.nombre_completo,
                 "id": alumno.id,
+                "foto_url": foto_url,
                 "distance": float(dist),
             }
         )

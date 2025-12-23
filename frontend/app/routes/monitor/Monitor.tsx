@@ -34,6 +34,10 @@ export default function Monitor() {
     const video = videoRef.current!;
     const canvas = document.createElement("canvas");
 
+    if (!video.videoWidth || !video.videoHeight) {
+      throw new Error("Video no listo");
+    }
+
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
@@ -52,13 +56,20 @@ export default function Monitor() {
     return new Blob([ab], { type: "image/jpeg" });
   }
 
-  // 🔹 Loop de reconocimiento
+  // Loop de reconocimiento
   async function recognize() {
     if (!videoRef.current) return;
 
     setStatus("detecting");
+    let blob: Blob;
 
-    const blob = captureFrame();
+    try {
+      blob = captureFrame();
+    } catch {
+      setStatus("idle");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("image", blob);
 
@@ -72,13 +83,14 @@ export default function Monitor() {
 
       if (data.match) {
         setRecognized({
-          nombre: data.alumno,
+          alumno: data.alumno,
+          foto_url: data.foto_url ?? null,
+          already_registered: data.already_registered,
           fecha: new Date().toLocaleString(),
-          foto: data.photo_url ?? null,
         });
 
-        // ⏸️ Pausa 3 segundos para evitar spam
-        clearInterval(intervalRef.current);
+        // Pausa 3 segundos para evitar spam
+        stopLoop();
         setTimeout(startLoop, 3000);
       }
     } catch (e) {
@@ -89,13 +101,21 @@ export default function Monitor() {
   }
 
   function startLoop() {
+    if (intervalRef.current) return;
     intervalRef.current = setInterval(recognize, 1500);
   }
 
-  // 🔹 Arrancar loop
+  function stopLoop() {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }
+
+  // Arrancar loop
   useEffect(() => {
     startLoop();
-    return () => clearInterval(intervalRef.current);
+    return () => stopLoop();
   }, []);
 
   return (
@@ -115,21 +135,32 @@ export default function Monitor() {
 
       {/* 👤 Resultado */}
       <ComponentCard title="Bienvenido al CBTIS 190">
-        {recognized ? (
-          <div className="space-y-4 text-center">
-            <h2 className="text-xl font-semibold">Hola, {recognized.nombre}</h2>
-            <p className="text-gray-500">{recognized.fecha}</p>
-
-            {recognized.foto && (
+        {recognized && (
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md flex items-center gap-6">
+            {recognized.foto_url && (
               <img
-                src={recognized.foto}
-                alt="Foto"
-                className="mx-auto w-40 h-40 rounded-full object-cover"
+                src={recognized.foto_url}
+                alt={recognized.alumno}
+                className="w-24 h-24 rounded-full object-cover border"
               />
             )}
+
+            <div>
+              <h2 className="text-xl font-semibold">
+                👋 Bienvenido al CBTIS 190
+              </h2>
+
+              <p className="text-lg mt-1">{recognized.alumno}</p>
+
+              <p className="text-sm text-gray-500">
+                {recognized.already_registered
+                  ? "Asistencia ya registrada hoy"
+                  : "Asistencia registrada correctamente"}
+              </p>
+
+              <p className="text-xs text-gray-400 mt-1">{recognized.fecha}</p>
+            </div>
           </div>
-        ) : (
-          <p className="text-gray-500 text-center">Esperando reconocimiento…</p>
         )}
       </ComponentCard>
     </div>
