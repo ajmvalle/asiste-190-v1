@@ -36,6 +36,17 @@ const navItems: NavItem[] = [
     name: "Estudiantes",
     subItems: [{ name: "Lista", path: "/app/students", pro: false }],
   },
+  {
+    icon: <PlugInIcon />,
+    name: "Asistencia",
+    subItems: [
+      {
+        name: "Monitor",
+        path: "/app/monitor",
+        pro: false,
+      },
+    ],
+  },
 ];
 
 const othersItems: NavItem[] = [];

@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/auth/", include("accounts.urls")),
     path("api/students/", include("students.urls")),
+    path("api/face/", include("face_recognition.urls")),
 ]
 
 if settings.DEBUG:

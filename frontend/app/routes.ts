@@ -14,10 +14,13 @@ export default [
   route("app", "layout/AppLayout.tsx", [
     route("dashboard", "routes/dashboard.tsx"),
 
+    route("monitor", "routes/monitor/Monitor.tsx"),
+
     route("students", "routes/students/StudentsLayout.tsx", [
       index("routes/students/StudentsList.tsx"),
       route("new", "routes/students/StudentCreate.tsx"),
       route(":id/edit", "routes/students/StudentEdit.tsx"),
+      route(":id/face", "routes/students/StudentFaceCapture.tsx"),
     ]),
   ]),
 

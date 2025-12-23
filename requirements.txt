@@ -1,8 +1,29 @@
+# =========================
+# Core Django
+# =========================
 asgiref==3.11.0
 Django==5.2.9
 django-cors-headers==4.9.0
 djangorestframework==3.16.1
-mysqlclient==2.2.7
 python-dotenv==1.2.1
 sqlparse==0.5.4
 tzdata==2025.3
+
+# =========================
+# Database
+# =========================
+mysqlclient==2.2.7
+
+# =========================
+# Images & Media
+# =========================
+pillow==12.0.0
+
+# =========================
+# Face Recognition
+# =========================
+numpy==2.2.6
+opencv-python==4.12.0.88
+insightface==0.7.3
+onnxruntime==1.23.2
+scikit-learn==1.7.2

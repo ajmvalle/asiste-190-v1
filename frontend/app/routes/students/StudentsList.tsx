@@ -138,6 +138,13 @@ export default function StudentsList() {
                       Editar
                     </Link>
 
+                    <Link
+                      to={`${a.id}/face`}
+                      className="text-indigo-500 hover:underline"
+                    >
+                      Rostro
+                    </Link>
+
                     <button
                       onClick={() => handleDelete(a.id)}
                       className="text-red-500 hover:underline"
