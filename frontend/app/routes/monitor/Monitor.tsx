@@ -13,12 +13,42 @@ export default function Monitor() {
   // 🔹 Iniciar cámara
   useEffect(() => {
     async function startCamera() {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      // 1️⃣ Pedir permiso primero (stream temporal)
+      const tempStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      tempStream.getTracks().forEach((t) => t.stop());
+
+      // 2️⃣ Ahora sí listar cámaras
+      const cameras = await getCameras();
+
+      // 👉 intenta USB / cámara externa
+      const camera =
+        cameras.find((c) => c.label.toLowerCase().includes("usb")) ??
+        cameras[1] ??
+        cameras[0];
+
+      if (!camera) {
+        console.error("No hay cámaras disponibles");
+        return;
+      }
+
+      // 3️⃣ Stream final
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          deviceId: { exact: camera.deviceId },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+
       streamRef.current = stream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
+
+      console.log("Usando cámara:", camera.label);
     }
 
     startCamera();
@@ -56,6 +86,11 @@ export default function Monitor() {
     return new Blob([ab], { type: "image/jpeg" });
   }
 
+  async function getCameras() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter((d) => d.kind === "videoinput");
+  }
+
   // Loop de reconocimiento
   async function recognize() {
     if (!videoRef.current) return;
@@ -80,6 +115,29 @@ export default function Monitor() {
       });
 
       const data = await res.json();
+
+      // DISTANCIA INVÁLIDA
+      if (!res.ok && data.reason === "DISTANCE_INVALID") {
+        setRecognized({
+          alumno: null,
+          distance_cm: data.distance_cm,
+          message: data.message,
+          error: true,
+          fecha: new Date().toLocaleString(),
+        });
+        return;
+      }
+
+      // ERROR DE SENSOR
+      if (!res.ok && data.reason === "DISTANCE_READ_ERROR") {
+        setRecognized({
+          alumno: null,
+          message: "Error leyendo sensor",
+          error: true,
+          fecha: new Date().toLocaleString(),
+        });
+        return;
+      }
 
       if (data.match) {
         setRecognized({
@@ -135,7 +193,22 @@ export default function Monitor() {
 
       {/* 👤 Resultado */}
       <ComponentCard title="Bienvenido al CBTIS 190">
-        {recognized && (
+        {recognized && recognized.error && (
+          <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-xl p-6 shadow-md">
+            <h2 className="text-lg font-semibold">📏 Ajusta tu distancia</h2>
+            <p className="mt-2">{recognized.message}</p>
+
+            {recognized.distance_cm && (
+              <p className="mt-1 text-sm">
+                Distancia actual: <b>{recognized.distance_cm} cm</b>
+              </p>
+            )}
+
+            <p className="text-xs text-gray-500 mt-2">{recognized.fecha}</p>
+          </div>
+        )}
+
+        {recognized && !recognized.error && (
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md flex items-center gap-6">
             {recognized.foto_url && (
               <img

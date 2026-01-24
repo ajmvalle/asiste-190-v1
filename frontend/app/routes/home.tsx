@@ -45,7 +45,7 @@ export default function Home() {
                 className="inline-flex rounded-full bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-600
                                dark:bg-brand-500/15 dark:text-brand-400"
               >
-                Plantilla base educativa
+                Plantilla base educativa para reconocimiento facial
               </span>
 
               <h1 className="text-4xl md:text-5xl font-semibold leading-tight text-gray-900 dark:text-white">
